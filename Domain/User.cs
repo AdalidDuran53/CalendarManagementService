@@ -8,19 +8,19 @@ public partial class User: IValidation
     {
     }
 
-    public User(Guid userId, string userName, string password,string salst)
+    public User(Guid userId, string userEmail, string userName, string password,string salt)
     {
         this.UserId = userId;
+        this.UserEmail = userEmail;
         this.UserName = userName;
         this.PasswordHash = password;
-        this.PasswordSalst = salst;
+        this.PasswordSalt = salt;
     }
     public Guid UserId { get; set; }
-
-    public string? UserName { get; set; }
-
+    public string UserEmail { get; set; }
+    public string UserName { get; set; }
     public string PasswordHash { get; set; } = null!;
-    public string PasswordSalst { get; set; } = null!;
+    public string PasswordSalt { get; set; } = null!;
 
     public bool? IsDeleted { get; set; }
 

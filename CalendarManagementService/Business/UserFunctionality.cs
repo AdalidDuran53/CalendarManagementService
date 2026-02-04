@@ -8,14 +8,14 @@ namespace CalendarManagementService.Business
 {
     public class UserFunctionality : FunctionalityBaseController
     {
-        public async Task<ActionResult> AddUser(string userName, string password)
+        public async Task<ActionResult> AddUser(string userEmail, string userName, string password)
         {
             try
             {
 
                 var pass = HashPassword(password);
                 // build the user object
-                User newUser = new User(userId: Guid.NewGuid(), userName: userName, password: pass.Hash, salst: pass.Salt);
+                User newUser = new User(userId: Guid.NewGuid(), userEmail: userEmail, userName: userName, password: pass.Hash, salt: pass.Salt);
                 // validate the user object
                 this.ValidateModel(newUser);
                 // save the user object
@@ -50,14 +50,14 @@ namespace CalendarManagementService.Business
         }
 
 
-        public async Task<CustomResponse> LoginUser(string userName, string password)
+        public async Task<CustomResponse> LoginUser(string userEmail, string password)
         {
             try
             {
                 // hash the password
                 var pass = HashPassword(password);
                 // build the user object
-                User DataUser = new User(userId: Guid.NewGuid(), userName: userName, password: pass.Hash, salst: pass.Salt);
+                User DataUser = new User(userId: Guid.NewGuid(), userEmail: userEmail, userName: userEmail, password: pass.Hash, salt: pass.Salt);
                 // validate the user object
                 this.ValidateModel(DataUser);
                 // check the user credentials
@@ -65,9 +65,9 @@ namespace CalendarManagementService.Business
                 {
                     // find the user by user name
                     var user = await context.Users
-                    .FirstOrDefaultAsync(u => u.UserName == DataUser.UserName && u.IsDeleted == false);
+                    .FirstOrDefaultAsync(u => u.UserEmail == DataUser.UserEmail && u.IsDeleted == false);
                     // if the user is not found or the password does not match, throw an error
-                    if (user == null || !this.VerifyPassword(password, user.PasswordHash, user.PasswordSalst))
+                    if (user == null || !this.VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
                     {
                         var exception = this._errorService.GetError("OMS-LOGIN-ERROR");
                         throw new OperationException(errorCode: exception.Code, message: exception.Message, details: exception.Details, new Guid());
@@ -128,7 +128,7 @@ namespace CalendarManagementService.Business
                     var user = await context.Users
                     .FirstOrDefaultAsync(u => u.UserId == userId && u.IsDeleted == false);
                     // if the user is not found, the session id does not match or the current password does not match, throw an error
-                    if (!VerifyPassword(currentPassword, user.PasswordHash, user.PasswordSalst))
+                    if (!VerifyPassword(currentPassword, user.PasswordHash, user.PasswordSalt))
                     {
                         var exception = this._errorService.GetError("OMS-SESSION-ERROR");
                         throw new OperationException(errorCode: exception.Code, message: exception.Message, details: exception.Details, new Guid());
@@ -141,7 +141,7 @@ namespace CalendarManagementService.Business
                             // hash the new password
                             var pass = HashPassword(newPassword);
                             user.PasswordHash = pass.Hash;
-                            user.PasswordSalst = pass.Salt;
+                            user.PasswordSalt = pass.Salt;
                         }
                         // if user name is provided, update the user name
                         if (!String.IsNullOrEmpty(userName))

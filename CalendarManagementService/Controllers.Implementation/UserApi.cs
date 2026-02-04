@@ -27,14 +27,14 @@ namespace CalendarManagementService.Controllers.Implementation
 
         [HttpPost]
         [Route("~/{version::apiVersion}/Users/AddUser")]
-        public override async Task<IActionResult> AddUser([FromRoute, RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$"), Required] string version, [Required] string userName, [Required] string password)
+        public override async Task<IActionResult> AddUser([FromRoute, RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$"), Required] string version, [Required, EmailAddress] string userEmail, [Required] string userName, [Required] string password)
         {
             // Log the request
-            Dictionary<string, object> request = new Dictionary<string, object> { { "CreateNewUserRequest", new object[] { "version: " + version, "userName: " + userName } } };
+            Dictionary<string, object> request = new Dictionary<string, object> { { "CreateNewUserRequest", new object[] { "version: " + version, "userEmail: " + userEmail, "userName: " + userName } } };
             try
             {
                 // Call the implementation
-                var result = await _userFunctionality.AddUser(userName, password);
+                var result = await _userFunctionality.AddUser(userEmail, userName, password);
                 // Log the response
                 Dictionary<string, object> response = new Dictionary<string, object> { { "CreateNewUserResponse", result } };
                 // Log the operation
@@ -55,14 +55,14 @@ namespace CalendarManagementService.Controllers.Implementation
 
         [HttpPost]
         [Route("~/{version::apiVersion}/Users/Login")]
-        public override async Task<IActionResult> Login([FromRoute, RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$"), Required] string version, [Required] string userName, [Required] string password)
+        public override async Task<IActionResult> Login([FromRoute, RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$"), Required] string version, [Required, EmailAddress] string userEmail, [Required] string password)
         {
             // Log the request
-            Dictionary<string, object> request = new Dictionary<string, object> { { "LoginRequest", new object[] { "version: " + version, "userName: " + userName } } };
+            Dictionary<string, object> request = new Dictionary<string, object> { { "LoginRequest", new object[] { "version: " + version, "userEmail: " + userEmail } } };
             try
             {
                 // Call the implementation
-                var result = await _userFunctionality.LoginUser(userName, password);
+                var result = await _userFunctionality.LoginUser(userEmail, password);
                 // Log the response
                 var sessionLogResponse = await _serviceBaseFunctionality.InitSession(result.UserId);
                 Dictionary<string, object> response = new Dictionary<string, object> { { "LoginResponse", result }, { "SessionLogResponse", sessionLogResponse } };
