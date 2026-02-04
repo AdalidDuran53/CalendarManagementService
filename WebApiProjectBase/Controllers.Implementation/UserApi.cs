@@ -82,6 +82,63 @@ namespace WebApiProjectBase.Controllers.Implementation
             }
         }
 
+        [HttpPut]
+        [Route("~/{version::apiVersion}/Users/UpdateUser")]
+        public override async Task<IActionResult> UpdateUser([FromRoute][Required][RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$")] string version, [Required] Guid userId, [Required] Guid sessionId, [Required] string currentPassword, string newPassword = null, string userName = null)
+        {
+            // Log the request
+            Dictionary<string, object> request = new Dictionary<string, object> { { "UpdateUserRequest", new object[] { "version: " + version, "userId: " + userId, "sessionId: " + sessionId, "newPassword: " + !String.IsNullOrEmpty(newPassword), "newUserName: " + !String.IsNullOrEmpty(userName) } } };
+            try
+            {
+                // Call the implementation
+                var result = await _userFunctionality.UpdateUser(userId, sessionId, currentPassword, newPassword, userName);
+                // Log the response
+                Dictionary<string, object> response = new Dictionary<string, object> { { "UpdateUserResponse", result } };
+                // Log the operation
+                await _serviceBaseFunctionality.LogOperation(request, response, sessionId);
+                // return the result
+                return Ok(new CustomResponse(statusCode: StatusCodes.Status200OK, message: result.Message, userId: result.UserId, sessionId: sessionId));
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Dictionary<string, object> response = new Dictionary<string, object> { { "ErrorUpdateUserResponse", ex } };
+                await _serviceBaseFunctionality.LogOperation(request, response, sessionId);
+                // if the exception is an OperationException, return a bad request with the error details
+                OperationException excep = ((OperationException)ex);
+                return this.BadRequest(new { StatusCode = StatusCodes.Status400BadRequest, code = excep.ErrorCode, message = excep.Message, details = excep.Details });
+            }
+        }
+
+
+        [HttpPut]
+        [Route("~/{version::apiVersion}/Users/CloseSession")]
+        public async override Task<IActionResult> CloseSession([FromRoute, RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$"), Required] string version, [Required] Guid userId, [Required] Guid sessionId)
+        {
+            // Log the request
+            Dictionary<string, object> request = new Dictionary<string, object> { { "CloseSessionRequest", new object[] { "version: " + version, "userId: " + userId, "sessionId: " + sessionId } } };
+            try
+            {
+                // Call the implementation
+                // close all sessions for the user
+                var result = await _serviceBaseFunctionality.CloseAllSession(userId, sessionId);
+                // Log the response
+                Dictionary<string, object> response = new Dictionary<string, object> { { "CloseSessionResponse", result }};
+                // Log the operation
+                await _serviceBaseFunctionality.LogOperation(request, response, sessionId);
+                // return the result
+                return Ok(new CustomResponse(statusCode: StatusCodes.Status200OK, message: result.Message, userId: result.UserId, sessionId: sessionId));
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Dictionary<string, object> response = new Dictionary<string, object> { { "ErrorCloseSessionResponse", ex } };
+                await _serviceBaseFunctionality.LogOperation(request, response, sessionId);
+                // if the exception is an OperationException, return a bad request with the error details
+                OperationException excep = ((OperationException)ex);
+                return this.BadRequest(new { StatusCode = StatusCodes.Status400BadRequest, code = excep.ErrorCode, message = excep.Message, details = excep.Details });
+            }
+        }
 
         [HttpDelete]
         [Route("~/{version::apiVersion}/Users/DeleteUser")]
@@ -106,34 +163,6 @@ namespace WebApiProjectBase.Controllers.Implementation
             {
                 // Log the exception
                 Dictionary<string, object> response = new Dictionary<string, object> { { "ErrorDeleteUserResponse", ex } };
-                await _serviceBaseFunctionality.LogOperation(request, response, sessionId);
-                // if the exception is an OperationException, return a bad request with the error details
-                OperationException excep = ((OperationException)ex);
-                return this.BadRequest(new { StatusCode = StatusCodes.Status400BadRequest, code = excep.ErrorCode, message = excep.Message, details = excep.Details });
-            }
-        }
-
-        [HttpPut]
-        [Route("~/{version::apiVersion}/Users/UpdateUser")]
-        public override async Task<IActionResult> UpdateUser([FromRoute][Required][RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$")] string version, [Required] Guid userId, [Required] Guid sessionId, [Required] string currentPassword, string newPassword = null, string userName = null)
-        {
-            // Log the request
-            Dictionary<string, object> request = new Dictionary<string, object> { { "UpdateUserRequest", new object[] { "version: " + version, "userId: " + userId, "sessionId: " + sessionId, "newPassword: " + !String.IsNullOrEmpty(newPassword), "newUserName: " + !String.IsNullOrEmpty(userName) } } };
-            try
-            {
-                // Call the implementation
-                var result = await _userFunctionality.UpdateUser(userId, sessionId, currentPassword, newPassword, userName);
-                // Log the response
-                Dictionary<string, object> response = new Dictionary<string, object> { { "UpdateUserResponse", result } };
-                // Log the operation
-                await _serviceBaseFunctionality.LogOperation(request, response, sessionId);
-                // return the result
-                return Ok(new CustomResponse(statusCode: StatusCodes.Status200OK, message: result.Message, userId: result.UserId, sessionId: sessionId));
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                Dictionary<string, object> response = new Dictionary<string, object> { { "ErrorUpdateUserResponse", ex } };
                 await _serviceBaseFunctionality.LogOperation(request, response, sessionId);
                 // if the exception is an OperationException, return a bad request with the error details
                 OperationException excep = ((OperationException)ex);
