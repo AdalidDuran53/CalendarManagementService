@@ -7,7 +7,7 @@ public partial class RequestJointCalendarStatus
 {
     public int Id { get; set; }
 
-    public string? StatusDescription { get; set; }
+    public string StatusDescription { get; set; } = null!;
 
     public virtual ICollection<RequestJointCalendar> RequestJointCalendars { get; set; } = new List<RequestJointCalendar>();
 }

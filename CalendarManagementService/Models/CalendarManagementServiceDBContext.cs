@@ -44,11 +44,12 @@ public partial class CalendarManagementServiceDbContext : DbContext
         var connectionString = config.GetConnectionString("DefaultConnection");
         optionsBuilder.UseSqlServer(connectionString);
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Calendar>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Calendar__3214EC273E70129A");
+            entity.HasKey(e => e.Id).HasName("PK__Calendar__3214EC27AEDF421C");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CalendarName).HasMaxLength(100);
@@ -59,7 +60,7 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
         modelBuilder.Entity<CalendarEvent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Calendar__3214EC27E33BD412");
+            entity.HasKey(e => e.Id).HasName("PK__Calendar__3214EC272D8A907A");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CalendarId).HasColumnName("CalendarID");
@@ -73,12 +74,13 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
             entity.HasOne(d => d.Calendar).WithMany(p => p.CalendarEvents)
                 .HasForeignKey(d => d.CalendarId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__CalendarE__isDel__36B12243");
         });
 
         modelBuilder.Entity<EventImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EventIma__3214EC27BB88ABBD");
+            entity.HasKey(e => e.Id).HasName("PK__EventIma__3214EC276D097E0E");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.EventId).HasColumnName("EventID");
@@ -86,12 +88,13 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
             entity.HasOne(d => d.Event).WithMany(p => p.EventImages)
                 .HasForeignKey(d => d.EventId)
-                .HasConstraintName("FK__EventImag__Event__398D8EEE");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__EventImag__ImgEv__398D8EEE");
         });
 
         modelBuilder.Entity<OperationLog>(entity =>
         {
-            entity.HasKey(e => e.OperationId).HasName("PK__Operatio__A4F5FC6416D8E239");
+            entity.HasKey(e => e.OperationId).HasName("PK__Operatio__A4F5FC64A8E77E77");
 
             entity.ToTable("OperationLog");
 
@@ -106,7 +109,7 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
         modelBuilder.Entity<RequestJointCalendar>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RequestJ__3214EC27338CB326");
+            entity.HasKey(e => e.Id).HasName("PK__RequestJ__3214EC27137C92F0");
 
             entity.ToTable("RequestJointCalendar");
 
@@ -116,24 +119,28 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
             entity.HasOne(d => d.Calendar).WithMany(p => p.RequestJointCalendars)
                 .HasForeignKey(d => d.CalendarId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__RequestJo__Calen__3E52440B");
 
             entity.HasOne(d => d.RequestingUserNavigation).WithMany(p => p.RequestJointCalendarRequestingUserNavigations)
                 .HasForeignKey(d => d.RequestingUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__RequestJo__Reque__3F466844");
 
             entity.HasOne(d => d.Status).WithMany(p => p.RequestJointCalendars)
                 .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__RequestJo__Statu__412EB0B6");
 
             entity.HasOne(d => d.UserRequestedNavigation).WithMany(p => p.RequestJointCalendarUserRequestedNavigations)
                 .HasForeignKey(d => d.UserRequested)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__RequestJo__UserR__403A8C7D");
         });
 
         modelBuilder.Entity<RequestJointCalendarStatus>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RequestJ__3214EC27D6345220");
+            entity.HasKey(e => e.Id).HasName("PK__RequestJ__3214EC2782C57B3B");
 
             entity.ToTable("RequestJointCalendarStatus");
 
@@ -143,7 +150,7 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
         modelBuilder.Entity<SessionLog>(entity =>
         {
-            entity.HasKey(e => e.SessionId).HasName("PK__SessionL__C9F4927065A968EB");
+            entity.HasKey(e => e.SessionId).HasName("PK__SessionL__C9F492703BF6C625");
 
             entity.ToTable("SessionLog");
 
@@ -161,9 +168,9 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACD9036EE2");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC9C0EA9A0");
 
-            entity.HasIndex(e => e.UserEmail, "UQ__Users__08638DF8EC4A8AC7").IsUnique();
+            entity.HasIndex(e => e.UserEmail, "UQ__Users__08638DF8D18B7E17").IsUnique();
 
             entity.Property(e => e.UserId)
                 .ValueGeneratedNever()
@@ -177,7 +184,7 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
         modelBuilder.Entity<UserCalendar>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserCale__3214EC2725821772");
+            entity.HasKey(e => e.Id).HasName("PK__UserCale__3214EC27C82FAD64");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CalendarId).HasColumnName("CalendarID");
@@ -188,10 +195,12 @@ public partial class CalendarManagementServiceDbContext : DbContext
 
             entity.HasOne(d => d.Calendar).WithMany(p => p.UserCalendars)
                 .HasForeignKey(d => d.CalendarId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__UserCalen__isDel__31EC6D26");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserCalendars)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__UserCalen__UserI__32E0915F");
         });
 

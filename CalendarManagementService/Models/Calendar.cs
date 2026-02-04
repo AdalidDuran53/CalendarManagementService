@@ -7,7 +7,7 @@ public partial class Calendar
 {
     public int Id { get; set; }
 
-    public string? CalendarName { get; set; }
+    public string CalendarName { get; set; } = null!;
 
     public bool? IsDeleted { get; set; }
 
