@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebApiProjectBase.Models;
+namespace CalendarManagementService.Models;
 
-public partial class WebApiProjectBaseDbContext : DbContext
+public partial class CalendarManagementServiceDbContext : DbContext
 {
-    public WebApiProjectBaseDbContext()
+    public CalendarManagementServiceDbContext()
     {
     }
 
-    public WebApiProjectBaseDbContext(DbContextOptions<WebApiProjectBaseDbContext> options)
+    public CalendarManagementServiceDbContext(DbContextOptions<CalendarManagementServiceDbContext> options)
         : base(options)
     {
     }

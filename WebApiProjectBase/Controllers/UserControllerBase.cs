@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApiProjectBase.Controllers
+namespace CalendarManagementService.Controllers
 {
     [ApiController]
     [Route("[controller]")]

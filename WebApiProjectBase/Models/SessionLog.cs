@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WebApiProjectBase.Models;
+namespace CalendarManagementService.Models;
 
 public partial class SessionLog
 {
