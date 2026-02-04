@@ -1,11 +1,11 @@
--- Feature: WAPB-2 
+-- Feature: CMS-1
 -- Author: Adalid
 -- Purpose: Create a new database
-CREATE DATABASE WebApiProjectBaseDB
+CREATE DATABASE CalendarManagementServiceDB
 GO
 
 USE WebApiProjectBaseDB;
-CREATE TABLE WebApiProjectBaseDB.dbo.Users (
+CREATE TABLE CalendarManagementServiceDB.dbo.Users (
     UserID UNIQUEIDENTIFIER PRIMARY KEY, -- UserID, must be UNIQUEIDENTIFIER
     UserName NVARCHAR(50) UNIQUE,         -- User name, must be UNIQUE
     PasswordHash NVARCHAR(MAX) NOT NULL,          -- PasswordHash, required
@@ -13,7 +13,7 @@ CREATE TABLE WebApiProjectBaseDB.dbo.Users (
     isDeleted BIT DEFAULT 0 -- isDeleted, DEFAULT 0 => isDeleted = false
 );
 
-CREATE TABLE WebApiProjectBaseDB.dbo.SessionLog (
+CREATE TABLE CalendarManagementServiceDB.dbo.SessionLog (
     SessionID UNIQUEIDENTIFIER PRIMARY KEY, 
     UserID UNIQUEIDENTIFIER,         -- Foreign key
     InitSession DATETIME NOT NULL,          
@@ -21,7 +21,7 @@ CREATE TABLE WebApiProjectBaseDB.dbo.SessionLog (
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
-CREATE TABLE WebApiProjectBaseDB.dbo.OperationLog (
+CREATE TABLE CalendarManagementServiceDB.dbo.OperationLog (
     OperationID INT IDENTITY(1,1) PRIMARY KEY, 
     SessionID UNIQUEIDENTIFIER,      -- Foreign key 
     OperationDate DATETIME,         

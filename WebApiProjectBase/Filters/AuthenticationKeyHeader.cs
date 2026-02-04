@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace WebApiProjectBase.Filters
+namespace CalendarManagementService.Filters
 {
     public class AuthenticationKeyHeader : Attribute, IOperationFilter
     {
