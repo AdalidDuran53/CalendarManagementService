@@ -35,7 +35,7 @@ namespace WebApiProjectBase.Business
                     await context.SaveChangesAsync();
                 }
                 // return the result
-                var result = Ok(new { success = true, message = "Data saved successfully." });
+                var result = new CustomResponse(statusCode: StatusCodes.Status201Created, message: "Login successfully.", userId: newUser.UserId);
                 return result;
             }
             catch (Exception ex)
