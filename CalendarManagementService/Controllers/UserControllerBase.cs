@@ -17,7 +17,7 @@ namespace CalendarManagementService.Controllers
         [SwaggerResponse(statusCode: 201, type: typeof(ActionResult), description: "Created")]
         [SwaggerResponse(statusCode: 400, type: typeof(ActionResult), description: "Bab Request")]
         [SwaggerResponse(statusCode: 401, type: typeof(ActionResult), description: "Unauthorized")]
-        public abstract Task<IActionResult> AddUser([FromRoute][Required][RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$")] string version, [Required] string userName, [Required] string password);
+        public abstract Task<IActionResult> AddUser([FromRoute][Required][RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$")] string version, [Required, EmailAddress] string userEmail, [Required] string userName, [Required] string password);
 
         [HttpPost]
         [EnableRateLimiting("IpPolicy")]
@@ -25,7 +25,7 @@ namespace CalendarManagementService.Controllers
         [SwaggerResponse(statusCode: 200, type: typeof(ActionResult), description: "Ok")]
         [SwaggerResponse(statusCode: 400, type: typeof(ActionResult), description: "Bab Request")]
         [SwaggerResponse(statusCode: 401, type: typeof(ActionResult), description: "Unauthorized")]
-        public abstract Task<IActionResult> Login([FromRoute][Required][RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$")] string version, [Required] string userName, [Required] string password);
+        public abstract Task<IActionResult> Login([FromRoute][Required][RegularExpression("^(?<major>[0-9]+).(?<major>[0-9]+)$")] string version, [Required, EmailAddress] string userEmail, [Required] string password);
 
         [HttpDelete]
         [EnableRateLimiting("IpPolicy")]
